@@ -1,0 +1,13 @@
+---
+- name: Install ccache
+  apt: name=ccache
+
+- name: ccache dir config via environment variable
+  lineinfile:
+    name: /etc/environment
+    line: "CCACHE_DIR={{ ccache_dir }}"
+
+- name: ccache size config via environment variable
+  lineinfile:
+    name: /etc/environment
+    line: "CCACHE_MAXSIZE={{ ccache_size }}"

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - gcc
+    - ccache
+    - ogs-dev
+    - jenkins-slave
+    - conan

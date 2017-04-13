@@ -1,0 +1,6 @@
+---
+- name:  Install pip
+  apt: name=python-pip
+
+- name: Install conan
+  pip: name=conan version={{ conan_version }}

@@ -1,0 +1,8 @@
+---
+- name:  Install required GUI packages
+  apt: name={{ item }}
+  with_items:
+    - qtbase5-dev
+    - libqt5xmlpatterns5-dev
+    - libgeotiff-dev
+    - libshp-dev

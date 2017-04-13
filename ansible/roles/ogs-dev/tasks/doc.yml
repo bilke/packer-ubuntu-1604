@@ -1,0 +1,6 @@
+---
+- name: Install doc packages
+  apt: name={{ item }}
+  with_items:
+    - doxygen
+    - graphviz

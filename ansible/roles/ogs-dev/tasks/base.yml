@@ -1,0 +1,24 @@
+---
+- name:  Install curl
+  apt: name={{ item }}
+  with_items:
+    - curl
+
+- name: Downlad git-lfs repo script
+  get_url:
+    url: https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh
+    dest: /tmp/git-lfs-install.sh
+
+- name: Register git-lfs repo
+  command: bash /tmp/git-lfs-install.sh
+  args:
+    creates: /etc/apt/sources.list.d/github_git-lfs.list
+
+- name:  Install packages
+  apt: name={{ item }}
+  with_items:
+    - cmake
+    - libeigen3-dev
+    - git
+    - git-lfs
+    - time

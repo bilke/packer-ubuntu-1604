@@ -1,0 +1,6 @@
+---
+- name: Create Jenkins user
+  user:
+    name: jenkins
+    uid: 500
+    password: $6$IE2Om0XTo4w82$qmvcM3IG1eRH2xlFp0Qz3bNd4HtD/R1ZbbK3teyfrySgfFY.LcvXi76/LJNxaHApnq7sNYeT1F1bGEGhfsFj9.

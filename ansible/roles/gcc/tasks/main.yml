@@ -1,0 +1,21 @@
+---
+- name: Install toolchain PPA
+  apt_repository: repo='ppa:ubuntu-toolchain-r/test' update_cache=yes
+
+- name:  Install gcc
+  apt: name={{ item }}
+  with_items:
+    - gcc-{{ gcc_version }}
+    - g++-{{ gcc_version }}
+    - gcc-{{ gcc_version }}-base
+    - make
+
+- name: Set installed gcc as default
+  alternatives:
+    name: "{{ item }}"
+    link: /usr/bin/{{ item }}
+    path: /usr/bin/{{ item }}-{{ gcc_version }}
+  with_items:
+    - gcc
+    - g++
+    - gcov

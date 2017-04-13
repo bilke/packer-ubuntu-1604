@@ -1,0 +1,35 @@
+---
+- name:  Install packages
+  apt: name={{ item }}
+  with_items:
+    - cmake
+    - freeglut3-dev
+    - make
+
+- name: Download and extract
+  unarchive:
+    src: https://ogsstorage.blob.core.windows.net/jenkins/ogs6-lib-sources/vtk-{{ vtk_version }}.0.tar.gz
+    dest: /tmp
+    creates: /tmp/VTK-{{ vtk_version }}.0
+    remote_src: True
+
+- name: Create build directory
+  file:
+    path: /tmp/vtk-build
+    state: directory
+
+- name: Configure
+  command: cmake ../VTK-{{ vtk_version }}.0 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DBUILD_TESTING=OFF \
+    -DModule_vtkIOParallelXML=ON
+  args:
+    chdir: /tmp/vtk-build
+    creates: /tmp/vtk-build/CMakeCache.txt
+
+- name: Build
+  command: make -j 2 install # -j$(nproc)
+  args:
+    chdir: /tmp/vtk-build
+    creates: /usr/local/include/vtk-{{ vtk_version}}

@@ -1,0 +1,50 @@
+---
+- name: Download yarn apt key
+  command: wget https://dl.yarnpkg.com/debian/pubkey.gpg -O /tmp/yarn_key.gpg
+    creates=/tmp/yarn_key.gpg
+
+- name: Add yarn apt key
+  apt_key: file=/tmp/yarn_key.gpg
+
+- name: Add yarn repo source
+  lineinfile:
+    name: /etc/apt/sources.list.d/yarn.list
+    line: 'deb https://dl.yarnpkg.com/debian/ stable main'
+    create: yes
+  register: yarn_repo
+
+- name: Update cache
+  apt: update_cache=yes
+  when: yarn_repo.changed
+
+- name: Install web packages
+  apt: name={{ item }}
+  with_items:
+    - nodejs
+    - npm
+    - python-pip
+    - python2.7
+    - yarn
+
+- name: Set installed Python as default
+  alternatives:
+    name: python
+    link: /usr/bin/python
+    path: /usr/bin/python2.7
+
+- name: Set node executable
+  alternatives:
+    name: node
+    link: /usr/bin/node
+    path: /usr/bin/nodejs
+
+- name: Download and extract hugo
+  unarchive:
+    src: https://github.com/spf13/hugo/releases/download/v{{ hugo_version }}/hugo_{{ hugo_version }}_Linux-64bit.tar.gz
+    dest: /tmp
+    creates: /tmp/hugo_{{ hugo_version }}_linux_amd64/hugo_{{ hugo_version }}_linux_amd64
+    remote_src: True
+
+- name: Copy hugo to path
+  command: mv /tmp/hugo_{{ hugo_version }}_linux_amd64/hugo_{{ hugo_version }}_linux_amd64 /usr/local/bin/hugo
+    creates=/usr/local/bin/hugo

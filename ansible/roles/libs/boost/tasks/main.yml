@@ -1,0 +1,19 @@
+---
+- name: Download and extract boost
+  unarchive:
+    src: https://ogsstorage.blob.core.windows.net/jenkins/ogs6-lib-sources/boost_{{ boost_version }}_0.tar.bz2
+    dest: /usr/local
+    creates: /usr/local/boost_{{ boost_version }}_0
+    remote_src: True
+
+- name: Correct boost directory permissions
+  file:
+    path: /usr/local/boost_{{ boost_version }}_0
+    state: directory
+    recurse: yes
+    mode: 0755
+
+- name: ccache size config via environment variable
+  lineinfile:
+    name: /etc/environment
+    line: "BOOST_ROOT=/usr/local/boost_{{ boost_version }}_0"

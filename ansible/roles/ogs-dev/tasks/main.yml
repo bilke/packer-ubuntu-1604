@@ -1,0 +1,6 @@
+---
+
+- include: base.yml
+- include: doc.yml
+- include: web.yml
+- include: gui.yml

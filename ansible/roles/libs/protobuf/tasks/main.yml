@@ -1,0 +1,36 @@
+---
+- name:  Install required packages
+  apt: name={{ item }}
+  with_items:
+    - autoconf
+    - automake
+    - libtool
+    - curl
+    - make
+    - g++
+    - unzip
+
+- name: Download and extract
+  unarchive:
+    src: https://github.com/google/protobuf/archive/v{{ protobuf_version }}.tar.gz
+    dest: /tmp
+    creates: /tmp/protobuf-{{ protobuf_version }}
+    remote_src: True
+
+- name: Autogen
+  command: ./autogen.sh
+  args:
+    chdir: /tmp/protobuf-{{ protobuf_version }}
+    creates: /tmp/protobuf-{{ protobuf_version }}/configure
+
+- name: Configure
+  command: ./configure
+  args:
+    chdir: /tmp/protobuf-{{ protobuf_version }}
+    creates: /tmp/protobuf-{{ protobuf_version }}/Makefile
+
+- name: Build
+  command: make install -j 2 # -j$(nproc)
+  args:
+    chdir: /tmp/protobuf-{{ protobuf_version }}
+    creates: /usr/local/include/google/protobuf
